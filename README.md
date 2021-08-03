@@ -1,14 +1,13 @@
 # Programming Theory in action submission
-version 0.0.1
+version 0.0.2
 
 ## Description
 A submission to the **Programming Theory in Action** tutorial in the Unity Junior Programmer: Apply object-oriented principles mission.
 
 ### TODO
--finish git setup
--tag develop branch with 0.0.1
--commit to develop
--add remote
--push to remote with tags
--create feature branch to start development
+  - create base class
+  - create inherited classes
+  - add properties/fields/methods/functions
+  - structure classes with private, protected, and public properties with getters and setters
+  - develop firearm testing with placeholder objects
 
