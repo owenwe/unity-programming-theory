@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,18 +5,20 @@ using UnityEngine.UI;
 
 public class UITitleScreenManager : MonoBehaviour
 {
-    [SerializeField] private Button SelectButton;
-    
-    // Start is called before the first frame update
-    void Start()
+    public void SelectUp()
     {
-        
+        if (TitleMainManager.Instance.CurrentSelectionIndex() > 0)
+        {
+            TitleMainManager.Instance.ChangeSelection(true);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SelectDown()
     {
-        
+        if (TitleMainManager.Instance.CurrentSelectionIndex() != (TitleMainManager.Instance.SelectionsLength() - 1))
+        {
+            TitleMainManager.Instance.ChangeSelection(false);
+        }
     }
 
     public void LoadMainScene()
