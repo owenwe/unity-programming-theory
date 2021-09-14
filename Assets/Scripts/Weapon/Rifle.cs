@@ -1,58 +1,82 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Weapon
 {
-    /**
+/**
  * Rifle class extends the Gun class adding firing modes; semi-auto, burst, and auto
  *   - Firing Mode: one of available values in the Firing_Modes Enum
  * TODO implement more functionalilty
  */
     public class Rifle : Gun
     {
-        private uint _rifleCapacity = 24;
-        private uint _rifleLoadedAmmunition = 0;
-        private Enum _firingMode = FiringModes.SemiAutomatic;
+        private const float SEMI_DELAY = 0.65f;
+        private const float BURST_DELAY = 0.85f;
+        private const float AUTO_DELAY = 0.2f;
+        
+        private Enum _firingMode = FiringModes.Automatic;
 
-        private readonly Dictionary<Enum, float> _powerToTypeMap = new Dictionary<Enum, float>
+        private readonly Dictionary<Enum, float> _modeDelayMapping = new Dictionary<Enum, float>
         {
-            { FiringModes.SemiAutomatic, 1200f },
-            { FiringModes.Burst, 2000f },
-            { FiringModes.Automatic, 1200f }
-        };
-
-        private readonly Dictionary<Enum, uint> _rateToTypeMap = new Dictionary<Enum, uint>
-        {
-            { FiringModes.SemiAutomatic, 350 },
-            { FiringModes.Burst, 50 },
-            { FiringModes.Automatic, 100 }
+            { FiringModes.SemiAutomatic, SEMI_DELAY },
+            { FiringModes.Burst, BURST_DELAY },
+            { FiringModes.Automatic, AUTO_DELAY }
         };
 
         public override string PrefabPath => "3D/Prefabs/Rifle";
-        public override uint Capacity { get; set; }
-        protected override uint LoadedAmmunition => _rifleLoadedAmmunition;
-        public override float Power => _powerToTypeMap[FiringMode];
 
-        public override uint DischargeRate => _rateToTypeMap[FiringMode];
+        public override uint Capacity => 24;
+
+        public override float DischargeRate => _modeDelayMapping[FiringMode];
+
+        public override Enum BallisticType
+        {
+            get => BallisticTypes.Bullet;
+            set { }
+        }
 
         public override Enum FiringMode
         {
             get => _firingMode;
             set
             {
-                switch (value)
+                _firingMode = value switch
                 {
-                    case FiringModes.SemiAutomatic:
-                        _firingMode = value;
-                        break;
-                    case FiringModes.Burst:
-                        _firingMode = value;
-                        break;
-                    case FiringModes.Automatic:
-                        _firingMode = value;
-                        break;
-                }
+                    FiringModes.SemiAutomatic => FiringModes.SemiAutomatic,
+                    FiringModes.Burst => FiringModes.Burst,
+                    FiringModes.Automatic => FiringModes.Automatic,
+                    _ => FiringModes.SemiAutomatic
+                };
             }
+        }
+        
+        public override float MaximumViewAngleY => (float) Math.PI / 5.5f;
+
+        public override uint Fire()
+        {
+            var fired = 0u;
+            if (LoadedAmmunition < 1) return fired;
+            
+            if (FiringMode.Equals(FiringModes.Burst))
+            {
+                if (LoadedAmmunition < 4)
+                {
+                    fired = LoadedAmmunition * 1;
+                    LoadedAmmunition = 0;
+                    return fired;
+                }
+
+                LoadedAmmunition -= 3;
+                fired = 3;
+            }
+            else
+            {
+                LoadedAmmunition--;
+                fired = 1;
+            }
+
+            return fired;
         }
     }
 }

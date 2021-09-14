@@ -23,7 +23,7 @@ namespace Scene
             return _currentSelectionIndex;
         }
 
-        public Selection CurrentSelection => _selections[CurrentSelectionIndex()];
+        public Selection CurrentSelection => _selections[_currentSelectionIndex];
 
         public int SelectionsLength
         {
@@ -110,22 +110,19 @@ namespace Scene
         {
             for (var i = 0; i < SelectionsLength; i++)
             {
-                if (i == CurrentSelectionIndex())
+                if (i == _currentSelectionIndex)
                 {
                     var s = CurrentSelection;
-                    //s.WeaponMeshRenderer.shadowCastingMode = ShadowCastingMode.On;
                     s.UpdateTransparency(1f, true, _moveDirection);
                 }
-                else if (i == CurrentSelectionIndex() - 1 || i == CurrentSelectionIndex() + 1)
+                else if (i == CurrentSelectionIndex() - 1 || i == _currentSelectionIndex + 1)
                 {
                     var s = _selections[i];
-                    //s.WeaponMeshRenderer.shadowCastingMode = ShadowCastingMode.On;
                     s.UpdateTransparency(0.15f, false, _moveDirection);
                 }
                 else
                 {
                     var s = _selections[i];
-                    //s.WeaponMeshRenderer.shadowCastingMode = ShadowCastingMode.Off;
                     s.UpdateTransparency(0f, false, _moveDirection);
                 }
             }
@@ -133,19 +130,19 @@ namespace Scene
 
         public float CurrentSelectionYPosition()
         {
-            return 4 * CurrentSelectionIndex();
+            return 4 * _currentSelectionIndex;
         }
 
         public void ChangeSelection(Boolean up)
         {
             var change = false;
-            if (up && CurrentSelectionIndex() > 0)
+            if (up && _currentSelectionIndex > 0)
             {
                 change = true;
                 _moveDirection = -1;
                 _currentSelectionIndex--;
             }
-            else if (!up && CurrentSelectionIndex() != SelectionsLength - 1)
+            else if (!up && _currentSelectionIndex != SelectionsLength - 1)
             {
                 change = true;
                 _moveDirection = 1;
