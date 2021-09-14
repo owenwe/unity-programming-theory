@@ -4,22 +4,17 @@ using UnityEngine;
 
 namespace Weapon
 {
-    /**
+/**
  * ProjectileWeapon class is the abstract class for ballistic-firing objects
  *   - Capacity: how many units of ballistic projectiles can be loaded
  *   - Loaded Ammunition: how many units of ballistic projectiles currently loaded
  *   - Ballistic Type: the type of projectile that will be fired
- *   - Discharge Rate: the amount of time (in milliseconds) between projectiles being fired
- *   - Power: how much force (energy impacted onto target) a ballistic projectile applies to a target
+ *   - Discharge Rate: the amount of time (in seconds) between projectiles being fired
  *   - Firing Mode: the method projectiles are fired, i.e. one at a time, continuously, etc.
  */
     public abstract class ProjectileWeapon : MonoBehaviour
     {
         private uint _capacity = 9;
-        private uint _loadedAmmunition;
-        private readonly uint _dischargeRate = 750;
-        protected float _power = 1200f;
-        private bool _isDischarging;
 
         public virtual uint Capacity
         {
@@ -27,25 +22,15 @@ namespace Weapon
             set { }
         }
 
-        protected virtual uint LoadedAmmunition
+        public virtual uint LoadedAmmunition { get; protected set; }
+
+        public virtual float DischargeRate
         {
-            get => _loadedAmmunition;
+            get => 0.5f;
             set { }
         }
 
-        public virtual uint DischargeRate
-        {
-            get => _dischargeRate;
-            set { }
-        }
-
-        public virtual float Power
-        {
-            get => _power;
-            set { }
-        }
-
-        public abstract Enum BallisticType { get; }
+        public abstract Enum BallisticType { get; set; }
 
         public virtual Enum FiringMode
         {
@@ -59,24 +44,22 @@ namespace Weapon
             }
         }
 
-        public virtual string PrefabPath { get; set; }
+        public virtual string PrefabPath => "3D/Prefabs/Gun";
+        
+        public virtual float MaximumViewAngleY { get; }
 
         public abstract void Reload();
 
-        public virtual void Fire()
+        // should return the number of projectiles fired
+        public virtual uint Fire()
         {
-            if (LoadedAmmunition > 0 && !_isDischarging)
-            {
-                _loadedAmmunition--;
-                _isDischarging = true;
-                StartCoroutine(FireCoroutine());
-            }
-        }
+            var fired = 0u;
+            if (LoadedAmmunition < 1) return fired;
 
-        private IEnumerator FireCoroutine()
-        {
-            yield return new WaitForSeconds((float)_dischargeRate / 1000);
-            _isDischarging = false;
+            LoadedAmmunition--;
+            fired = 1;
+
+            return fired;
         }
     }
 }

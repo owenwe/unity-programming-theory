@@ -78,7 +78,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
     - _Emission: 1
-    - _GlossMapScale: 0.67
+    - _GlossMapScale: 0
     - _Glossiness: 0.775
     - _GlossyReflections: 1
     - _Metallic: 0.5

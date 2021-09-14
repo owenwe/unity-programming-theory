@@ -28,7 +28,7 @@ namespace UI
         }
 
         public MeshRenderer WeaponMeshRenderer { get; private set; }
-        public string WeaponPrefab { get; set; }
+        public string WeaponPrefab { get; private set; }
 
         private void Awake()
         {
@@ -38,10 +38,6 @@ namespace UI
             _transparentMaterial = Instantiate(Resources.Load<Material>("Materials/Transparent"));
             ProjectileWeapon = gameObject.GetComponentInChildren<ProjectileWeapon>();
             WeaponMeshRenderer.material = _transparentMaterial;
-        }
-
-        private void Start()
-        {
             WeaponPrefab = ProjectileWeapon.PrefabPath;
         }
 

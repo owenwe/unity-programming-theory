@@ -5,6 +5,6 @@ namespace Weapon
         SemiAutomatic = 0,
         Burst = 1,
         Automatic = 2,
-        AdjustableAutomatic = 3
+        AdjustableAutomatic = 4
     }
 }
