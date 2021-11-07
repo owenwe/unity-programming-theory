@@ -1,22 +1,15 @@
 # Programming Theory in action submission
-version 0.0.5
+version 0.0.6
 
 ## Description
 A submission to the **Programming Theory in Action** tutorial in the Unity Junior Programmer: Apply object-oriented principles mission.
 
 ### Updates
   - General code cleanup
-  - Added helper class to calculate and streamline shot information
-  - Working functionality for Capacity, LoadedAmmunition, DischargeRate, FiringMode, and BallisticType properties
-  - Recharge functionality for energy weapons
-  - Added utility for logging to the canvas UI in the Main scene
+  - 
 
-### Completed for 0.0.4
-  - [x] implement better opacity fade functionality for the Title selection scene
-  - [x] make the movement between selecting weapons a smooth transition
-  - [x] basic ui control for the selected weapon on the Main scene
-  - [x] develop firearm testing with placeholder objects
-  - [x] raycast firing functionality for weapons on Main scene
+### Completed for 0.0.5
+  - [x] 
 
 ### TODO
   - create multiple targets of different types (e.g. static bullseye - cannot be destroyed, sphere - hardest, cylinder, cube - easiest)

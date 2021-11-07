@@ -31,12 +31,11 @@ namespace Scene
             _uiManager = _uiCanvas.GetComponentInChildren<UIMainManager>();
 
             FocalPoint = GameObject.Find("Focal Point");
-            //SelectedWeapon = "3D/Prefabs/Gun";
+            SelectedWeapon = "3D/Prefabs/Gun";
             //SelectedWeapon = "3D/Prefabs/Rifle";
-            SelectedWeapon = "3D/Prefabs/RailGun";
+            //SelectedWeapon = "3D/Prefabs/RailGun";
             //SelectedWeapon = "3D/Prefabs/GatlingGun";
             Target = GameObject.FindWithTag("Targets").GetComponent<BallisticTarget>();
-            Target.Health = 100;
             if (TitleMainManager.Instance != null)
             {
                 SelectedWeapon = TitleMainManager.Instance.Selected;

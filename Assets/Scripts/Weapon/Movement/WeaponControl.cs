@@ -7,8 +7,8 @@ using UnityEngine.Profiling;
 namespace Weapon.Movement
 {
 /**
- * WeaponControl handles the movement and rotation control of weapon objects based on mouse and keyboard input. It also
- * is the control class for everything related to firing from the ProjectileWeapon instance class.
+ * WeaponControl handles the movement and rotation control of weapon objects based on mouse and keyboard input.
+ * It's also the control class for everything related to firing from the ProjectileWeapon instance class.
  */
     public class WeaponControl : MonoBehaviour
     {
@@ -20,6 +20,7 @@ namespace Weapon.Movement
         private bool _triggerPressed;
         private bool _triggerReleased;
         private WaitForSeconds shotDuration;
+        private ParticleSystem muzzleFlash;
 
         // weapon information properties
         public ProjectileWeapon Weapon { get; private set; }
@@ -62,6 +63,7 @@ namespace Weapon.Movement
             FirePoint = _firePoint;
             FocalPoint = GameObject.Find("focalPoint");
             laserLine = GetComponentInChildren<LineRenderer>();
+            muzzleFlash = GameObject.Find("muzzleFlash").GetComponent<ParticleSystem>();
 
             ShotsFired = 0;
             shotDuration = ShotUtility.CalculateShotWait(FirePoint.transform.position);
@@ -71,6 +73,13 @@ namespace Weapon.Movement
         {
             //Profiler.BeginSample("Weapon Control Update");
             AmmoRemaining = GetRemainingAmmo();
+            
+            //
+            if (!IsEnergyWeapon && Input.GetKeyUp(KeyCode.R))
+            {
+                Weapon.Reload();
+                return;
+            }
             
             if (MovementEnabled)
             {
@@ -120,7 +129,19 @@ namespace Weapon.Movement
                 if (target != null)
                 {
                     // calculate based on weapon power
-                    target.Damage(ShotUtility.CalculateDamage(Weapon));
+                    //target.Damage(ShotUtility.CalculateDamage(Weapon));
+                    target.Damage(0.25f);
+                    
+                    // ****************
+                    // TODO having issues with impact particle system decal alignment, will need to fix
+                    // ****************
+                    // add particle prefab at hit location
+                    Vector3 iV = FocalPoint.transform.position - hit.point;
+                    Vector3 rV = Vector3.Reflect(iV, hit.normal);
+                    //print($"hit point: {hit.point}, muzzle: {FocalPoint.transform.position}");
+                    target.Hit(hit, iV);
+                    Debug.DrawRay(hit.point, hit.normal, Color.red, 5);
+                    Debug.DrawRay(hit.point, iV, Color.green, 5);
                 }
 
                 if (hit.rigidbody != null)
@@ -183,7 +204,10 @@ namespace Weapon.Movement
         private IEnumerator FireCoroutine()
         {
             laserLine.enabled = true;
+            // TODO play muzzle flash particle system
+            muzzleFlash.Play();
             yield return shotDuration;
+            muzzleFlash.Stop();
             laserLine.enabled = false;
         }
 
@@ -197,6 +221,7 @@ namespace Weapon.Movement
             float ammo = 0;
             if (IsEnergyWeapon)
             {
+                // TODO this seems weird. shouldn't Weapon.Energy be good enough?
                 if (Weapon.GetType().Equals(typeof(RailGun)))
                 {
                     ammo = ((RailGun)Weapon).Energy;
